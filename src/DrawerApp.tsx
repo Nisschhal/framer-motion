@@ -1,8 +1,8 @@
 import { useState } from "react"
 import "./drawerStyle.css"
-import { AnimatePresence, easeInOut, motion } from "framer-motion"
+import Drawer from "./Drawer"
 export default function DrawerApp() {
-  const [isActive, setIsActive] = useState<boolean>(false)
+  const [showDrawer, toggleDrawer] = useState<boolean>(false)
   return (
     <div className="App">
       <header>
@@ -11,41 +11,11 @@ export default function DrawerApp() {
 
       <div className="layout">
         <h2>Blog posts</h2>
-        <button onClick={() => setIsActive(true)}>Open Drawer</button>
-        <AnimatePresence>
-          {isActive && (
-            <motion.div
-              className="drawer-wrapper"
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              onDragEnd={(_, panInfo) => {
-                if (panInfo.point.y > 200) setIsActive(false)
-              }}
-            >
-              <motion.div
-                className="drawer"
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                initial={{
-                  y: "110%",
-                  opacity: 0,
-                }}
-                exit={{
-                  y: "110%",
-                  opacity: 0,
-                }}
-                transition={{
-                  duration: 1,
-                  ease: easeInOut,
-                }}
-              >
-                <button onClick={() => setIsActive(false)}>Close Drawer</button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <button onClick={() => toggleDrawer(true)}>Open Drawer</button>
+        <Drawer showDrawer={showDrawer} toggleDrawer={toggleDrawer}>
+          <h1>I am in drawer</h1>
+          <p>What a place to be</p>
+        </Drawer>
         <h3>List of stuff</h3>
         {posts.map((post) => (
           <DragItem post={post} key={post} />
@@ -55,7 +25,7 @@ export default function DrawerApp() {
   )
 }
 
-function DragItem({ post }) {
+function DragItem({ post }: { post: any }) {
   return (
     <div className="card" key={post}>
       <h4>List Item {post}</h4>
